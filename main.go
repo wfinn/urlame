@@ -20,11 +20,10 @@ var hashregex = regexp.MustCompile("^[a-zA-Z0-9]+$")
 var hashlens = []int{32, 40, 64, 128}
 
 var exts = []string{".css", ".png", ".jpg", ".jpeg", ".svg", ".gif", ".mp3", ".mp4", ".rss", ".ttf", ".woff", ".woff2", ".eot", ".pdf"}
-var paths = []string{"static", "assets", "wp-content", "blog", "blogs", "product", "doc", "docs", "support"}
+var paths = []string{"wp-content", "blog", "blogs", "product", "doc", "docs", "support"}
 
 func main() {
 	printNormalized := flag.Bool("print-normalized", false, "print the normalized version of the urls (for debugging)")
-	blockPaths := flag.Bool("block-paths", false, "block common paths like /static, /wp-content")
 	flag.Usage = func() {
 		fmt.Printf("cat urls.txt | %s [OPTIONS]\n", os.Args[0])
 		flag.PrintDefaults()
@@ -35,7 +34,7 @@ func main() {
 	for stdin.Scan() {
 		urlstr := stdin.Text()
 		if u, err := url.Parse(urlstr); err == nil {
-			if lamefiletype(u) || profilepage(u) || (*blockPaths && lamedir(u)) {
+			if lamefiletype(u) || profilepage(u) || lamedir(u) {
 				//skip those that we can be certain are lame
 				continue
 			}
@@ -65,14 +64,22 @@ func lamefiletype(u *url.URL) bool {
 }
 
 func lamedir(u *url.URL) bool {
-	for _, part := range strings.Split(u.Path, "/") {
-		lower := strings.ToLower(part)
-		for _, path := range paths {
-			if lower == path {
-				return true
-			}
+	lower := strings.ToLower(u.Path)
+	for _, lamepath := range paths {
+		if strings.HasPrefix(lower, "/"+lamepath) {
+			return true
 		}
 	}
+	/*
+		for now, only test the beginning of the path and ignore the code below
+		for _, part := range strings.Split(u.Path, "/") {
+			lower := strings.ToLower(part)
+			for _, path := range paths {
+				if lower == path {
+					return true
+				}
+			}
+		}*/
 	return false
 }
 
