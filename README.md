@@ -3,11 +3,11 @@
 removes lame urls from a list
 
 ```sh
-go install github.com/wfinn/stuff/urlame@latest
+go install github.com/wfinn/urlame@latest
 cat many_urls.txt | urlame > less_urls.txt
 ```
 
-The core idea is to normalize URLs; ignoring certain parts when comparing them against each other.
+The core idea is to normalize URLs, ignoring certain parts when comparing them against each other.
 
 ## Intended Use
 
