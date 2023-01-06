@@ -13,9 +13,9 @@ Then you can feed the resulting list into other tools or manually search interes
 
 ## Things urlame considers lame
 
-The core idea is to normalize URLs, ignoring certain parts when comparing them against each other, and ignoring easy to identify boring URLs.  
+The core idea is to normalize URLs, ignoring certain parts when comparing them against each other, and blocking easy to identify boring URLs.  
 
-`urlame` will filter out lame directories like `/docs`, user profile pages and files with lame extentensions like `.png`.  
+`urlame` will filter out lame directories like `/docs`, user profile pages and files with lame extentensions like `.png`.
 This tool also ignores query values, so that only if a new parameter appears on a specific endpoint, the URL will be listed.
 
 It further can detect some patters in parts of URLs. In the following examples, only the first occurance would be listed.
