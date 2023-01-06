@@ -19,7 +19,7 @@ var uuidregex = regexp.MustCompile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4
 var hashregex = regexp.MustCompile("^[a-zA-Z0-9]+$")
 var hashlens = []int{32, 40, 64, 128}
 
-var exts = []string{".css", ".png", ".jpg", ".jpeg", ".svg", ".gif", ".mp3", ".mp4", ".rss", ".ttf", ".woff", ".woff2", ".eot", ".pdf"}
+var exts = []string{".css", ".png", ".jpg", ".jpeg", ".svg", ".gif", ".mp3", ".mp4", ".rss", ".ttf", ".woff", ".woff2", ".eot", ".pdf", ".m4v", ".ogv", ".webm"}
 var paths = []string{"wp-content", "blog", "blogs", "product", "doc", "docs", "support"}
 
 func main() {
@@ -104,18 +104,28 @@ func normalizeURL(urlstr string) string {
 
 func normalizePath(path string) string {
 	normalized := ""
+	split := strings.Split(path, "/")
+	fileName := split[len(split)-1]
+	split = split[:len(split)-1]
 	for _, part := range strings.Split(path, "/") {
 		if strings.TrimSpace(part) == "" {
 			continue
 		}
 		normalized += "/" + normalizeItem(part)
 	}
+
+	// e.g. 123.json
+	lastInd := strings.LastIndex(fileName, ".")
+	if lastInd == -1 {
+		normalized += "/" + normalizeItem(fileName)
+	} else {
+		normalized += "/" + normalizeItem(fileName[:lastInd]) + "." + fileName[lastInd+1:]
+	}
 	return normalized
 }
 
 func normalizeItem(item string) string {
 	// it's unlikely that we have urls with !-X-! in them which we would miss here
-
 	if numberregex.MatchString(item) {
 		return "!-N-!"
 	} else if postitle(item) {
