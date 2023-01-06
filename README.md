@@ -6,19 +6,17 @@ removes lame urls from a list
 go install github.com/wfinn/urlame@latest
 cat many_urls.txt | urlame > less_urls.txt
 ```
-The core idea is to normalize URLs, ignoring certain parts when comparing them against each other.  
-Additionally some easy to identify lame URLs are filtered.
 
-## Intended use
-
-This tool can reduce a list of URLs in a way which should be good for pentesting / bug bounty.  
-E.g., when searchign intersting URLs in the output of tools like `waybackurls`, this can do some initial filtering.  
+This tool can reduce a list of URLs in a way which should be useful for pentesting / bug bounty.  
+E.g., when searching intersting URLs in the output of tools like `waybackurls`, this can do some initial filtering.  
 Then you can feed the resulting list into other tools or manually search interesting URLs in the list.
 
 ## Things urlame considers lame
 
+The core idea is to normalize URLs, ignoring certain parts when comparing them against each other, and ignoring easy to identify boring URLs.  
+
 `urlame` will filter out lame directories like `/docs`, user profile pages and files with lame extentensions like `.png`.  
-`urlame` also ignores query values, so that only if a new parameter appears on a specific endpoint, the URL will be listed.
+This tool also ignores query values, so that only if a new parameter appears on a specific endpoint, the URL will be listed.
 
 It further can detect some patters in parts of URLs. In the following examples, only the first occurance would be listed.
 
