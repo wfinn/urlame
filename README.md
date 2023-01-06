@@ -32,7 +32,7 @@ It further can detect some patters in parts of URLs, in the following examples, 
 | langage codes | /en-US/admin & /de-DE/admin |
 | numeric IDs  | /1000/details & /1001/details |
 | hashes | /file/e4a25f7b052442a076b02ee9a1818d2e & /file/bed128365216c019988915ed3add75fb |
-| UUIDs | /id/x & /id/y|
+| UUIDs | /id/123e4567-e89b-12d3-a456-426614174000 & /id/34c764cf-b13b-4d36-ab93-4474f5b91848|
 | profile pages | /user/max & /user/moritz |
 | common post titles | /common-post-title & /another-post-title |
 
