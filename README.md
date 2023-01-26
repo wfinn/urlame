@@ -1,21 +1,27 @@
 # urlame
 
-removes lame urls from a list
+This tool can reduce a list of URLs in a way which should be useful for pentesting / bug bounty.  
+E.g., when searching intersting URLs in the output of tools like `waymore`, this can do some initial filtering.
+
+`urlame` aims to print one URL per feature of the website in addition to blocking known lame URLs.  
+This is done by converting a URL into a pattern and matching that against the patterns seen before.
 
 ```sh
 go install github.com/wfinn/urlame@latest
-cat many_urls.txt | urlame > less_urls.txt
+urlame < many_urls.txt > less_urls.txt
 ```
 
-This tool can reduce a list of URLs in a way which should be useful for pentesting / bug bounty.  
-E.g., when searching intersting URLs in the output of tools like `waybackurls`, this can do some initial filtering.  
-Then you can feed the resulting list into other tools or manually search interesting URLs in the list.
+## Example
+
+The easiest way to understand what this does is to see it:
+
+//TODO picture
+
+For a more in depth understanding take a look at [the test TODO]() or the source code in general.
 
 ## Things urlame considers lame
 
-The core idea is to normalize URLs, ignoring certain parts when comparing them against each other, and blocking easy to identify boring URLs.  
-
-`urlame` will filter out lame directories like `/docs`, user profile pages and files with lame extentensions like `.png`.
+`urlame` will filter out lame directories like `/docs`, user profile pages and files with lame extentensions like `.png`.  
 This tool also ignores query values, so that only if a new parameter appears on a specific endpoint, the URL will be listed.
 
 It further can detect some patters in parts of URLs. In the following examples, only the first occurance would be listed.
@@ -28,7 +34,11 @@ It further can detect some patters in parts of URLs. In the following examples, 
 | UUIDs | /id/123e4567-e89b-12d3-a456-426614174000 & /id/34c764cf-b13b-4d36-ab93-4474f5b91848|
 | common post titles | /common-post-title & /another-post-title |
 
-*In a way* this means a URL is considered lame if the same feature of the website has been seen before.
+## Limitations
+
+Some websites have patterns which should be considered, but which do not apply for other targets, meaning `urlame` would filter stuff we do not want to filter out on these otehr websites.  
+In such cases, you must modify the source code yourself to get decent results.
+
 
 ---
 
