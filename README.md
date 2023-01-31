@@ -15,23 +15,20 @@ urlame < many_urls.txt > less_urls.txt
 
 The easiest way to understand what this does is to see it:
 
-//TODO picture
-
-For a more in depth understanding take a look at [the test URLs](https://github.com/wfinn/urlame/blob/main/test_urls) or the source code in general.
+![image](https://user-images.githubusercontent.com/42862612/215803684-227232ff-97f7-4fea-af7e-86099da87de6.png)
 
 ## Things urlame considers lame
 
-`urlame` will filter out
-
-- lame directories like `/docs`
-- files with lame extentensions like `.png`
-- user profile pages like `/user/FooBar`
+As a first step, `urlame` will filter out
+- lame directories like `/docs`,
+- files with lame extentensions like `.png`,
+- and user profile pages like `/user/FooBar`.
 
 This tool also ignores query values, so that only if a new parameter appears on a specific endpoint, the URL will be listed.  
 This means once `/foo?id=bar` was seen, `/foo?id=baz` will not be printed.  
 Certain URL query parameters are ignored completely, so that `/foo` and `/foo?utm_source=twitter` are considered equal.
 
-It further can detect some patters in parts of URLs. In the following examples, only the first occurance would be listed.
+It further can detect some patterns in parts of URLs. In the following examples, only the first occurance would be listed.
 
 | Pattern | Example |
 | ------- | ---------- |
@@ -43,10 +40,11 @@ It further can detect some patters in parts of URLs. In the following examples, 
 
 ## Customization
 
-You can just use `urlame` without any customization, but know that it is opinionated and generic.
+You can just use `urlame` without any customization, but be aware that it is opinionated and generic.
 
-Some websites have patterns which should be considered, but which do not apply for other targets, meaning `urlame` would filter stuff we do not want to filter out on these other websites.  
-In such cases, you must modify the source code yourself to get decent results.
+Some websites have patterns which should be considered, but which do not apply for other targets,
+meaning `urlame` would filter stuff we do not want to filter out on these other websites.  
+In such cases, you must modify the source code yourself to get better results.
 
 One mechanism for target specific filtering exists called "equivalences".  
 These are words you can define, which are kind of equivalent, from our view.  
@@ -55,6 +53,6 @@ so only the first `/%carmodel%-details` and `/api/foo/%carmodel%` URLs are print
 
 ---
 
-If you have ideas for more stuff to filter out, [let me know](https://github.com/wfinn/urlame/issues/new).
+If you have ideas for more stuff to filter out or find a bug, [let me know](https://github.com/wfinn/urlame/issues/new).
 
 Inspired by [uro](https://github.com/s0md3v/uro)
