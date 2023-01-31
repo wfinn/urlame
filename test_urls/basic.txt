@@ -3,20 +3,28 @@ http://example.com/docs/boring
 https://example.org/user/rick
 https://example.org/user/morty
 
-https://example.com/foo
-http://example.com/foo/?
+https://example.com/trailingslash
+http://example.com/trailingslash/?
 
-http://example.org/foo/bar/
-http://example.org/foo/bar/?utm_source=twitter
+http://example.org/foo/uselessparam/
+http://example.org/foo/uselessparam/?utm_source=twitter
 
-http://example.com/en_US/lol
-http://example.com/de/lol
-http://example.com/de_DE/lol
+http://example.com/en_US/langcode
+http://example.com/de/langcode
+http://example.com/de_DE/langcode
 
-http://example.com/data/year-2018-pix
-http://example.com/data/year-2017-pix
-http://example.com/data/year-2016-pix
+http://example.com/numbers/year-2018-pix
+http://example.com/numbers/year-2017-pix
+http://example.com/numbers/year-2016-pix
 
 https://localhost/files/123.json
 https://localhost/files/456.json
 https://localhost/files/admin.json
+
+https://example.org/params?A=something
+https://example.org/params?A=something_else
+https://example.org/params?A=something_else_entirely
+https://example.org/params?B=something
+
+https://example.com/?encoded[1]=xyz
+https://example.com/?encoded%5B1%5D=xyz

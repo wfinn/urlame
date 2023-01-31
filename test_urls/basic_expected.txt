@@ -1,6 +1,9 @@
-https://example.com/foo
-http://example.org/foo/bar/
-http://example.com/en_US/lol
-http://example.com/data/year-2018-pix
+https://example.com/trailingslash
+http://example.org/foo/uselessparam/
+http://example.com/en_US/langcode
+http://example.com/numbers/year-2018-pix
 https://localhost/files/123.json
 https://localhost/files/admin.json
+https://example.org/params?A=something
+https://example.org/params?B=something
+https://example.com/?encoded[1]=xyz

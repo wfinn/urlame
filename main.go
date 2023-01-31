@@ -183,6 +183,11 @@ func normalizePath(path string) string {
 
 func normalizeItem(item string) string {
 	orig := item
+	//TODO check if this breaks things
+	if decoded, err := url.QueryUnescape(item); err == nil {
+		item = decoded
+		fmt.Println(item)
+	}
 	item = applyequivalences(item)
 	item = hashregex.ReplaceAllString(item, "!-H-!")
 	item = uuidregex.ReplaceAllString(item, "!-U-!")
