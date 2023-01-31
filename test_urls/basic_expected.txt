@@ -1,0 +1,4 @@
+https://example.com/foo
+http://example.org/foo/bar/
+http://example.com/en_US/lol
+http://example.com/data/year-2018-pix

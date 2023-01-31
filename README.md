@@ -17,12 +17,19 @@ The easiest way to understand what this does is to see it:
 
 //TODO picture
 
-For a more in depth understanding take a look at [the test TODO]() or the source code in general.
+For a more in depth understanding take a look at [the test URLs](https://github.com/wfinn/urlame/blob/main/test_urls) or the source code in general.
 
 ## Things urlame considers lame
 
-`urlame` will filter out lame directories like `/docs`, user profile pages and files with lame extentensions like `.png`.  
-This tool also ignores query values, so that only if a new parameter appears on a specific endpoint, the URL will be listed.
+`urlame` will filter out
+
+- lame directories like `/docs`
+- files with lame extentensions like `.png`
+- user profile pages like `/user/FooBar`
+
+This tool also ignores query values, so that only if a new parameter appears on a specific endpoint, the URL will be listed.  
+This means once `/foo?id=bar` was seen, `/foo?id=baz` will not be printed.  
+Certain URL query parameters are ignored completely, so that `/foo` and `/foo?utm_source=twitter` are considered equal.
 
 It further can detect some patters in parts of URLs. In the following examples, only the first occurance would be listed.
 
@@ -34,15 +41,17 @@ It further can detect some patters in parts of URLs. In the following examples, 
 | UUIDs | /id/123e4567-e89b-12d3-a456-426614174000 & /id/34c764cf-b13b-4d36-ab93-4474f5b91848|
 | common post titles | /common-post-title & /another-post-title |
 
-## Equivalences
+## Customization
+
+You can just use `urlame` without any customization, but know that it is opinionated and generic.
 
 Some websites have patterns which should be considered, but which do not apply for other targets, meaning `urlame` would filter stuff we do not want to filter out on these other websites.  
 In such cases, you must modify the source code yourself to get decent results.
 
-One mechanism explicitly for target specific filtering exists called "Equivalences".  
+One mechanism for target specific filtering exists called "equivalences".  
 These are words you can define, which are kind of equivalent, from our view.  
 For example, when filtering tesla URLs you could define `model-3`,`model-y` and so on,
-so only the first `%carmodel%-release` and `/api/foo/%carmodel%` URLs are printed.
+so only the first `/%carmodel%-details` and `/api/foo/%carmodel%` URLs are printed.
 
 ---
 
