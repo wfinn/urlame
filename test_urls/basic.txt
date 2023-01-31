@@ -16,3 +16,7 @@ http://example.com/de_DE/lol
 http://example.com/data/year-2018-pix
 http://example.com/data/year-2017-pix
 http://example.com/data/year-2016-pix
+
+https://localhost/files/123.json
+https://localhost/files/456.json
+https://localhost/files/admin.json

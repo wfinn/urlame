@@ -14,16 +14,16 @@ import (
 
 // Equivalences are explained in README.md
 // Modify to include target specific words, which can be normalized to reduce results
-// left side must contain a unique string of the pattern !-FOO-!, this is used internally as replacement
+// left side must contain a unique string like FOO, not too long, not too short. This is used internally as replacement
 var equivalences = map[string][]string{
-	//"!-TESLA-!" : {"model-3","model-y", "..."},
+	//"TESLA": {"model-3", "model-y", ...},
 	// langcodes are too small and need to be treated seperately
 }
 
 //maybe numbers should be surrounded by special chars, or be at least a certain amount of digits?
 var numberregex = regexp.MustCompile("\\d+(\\.\\d+)?")
 var profilepageregex = regexp.MustCompile("(?i)/(u|user|profile|author|member|referral)s?/[^/]+/?")
-var titleregex = regexp.MustCompile("[A-Za-z0-9-.]+")
+var titleregex = regexp.MustCompile("[A-Za-z0-9.]-[A-Za-z0-9.]-[A-Za-z0-9.-]+")
 var langregex = buildlangregex()
 var uuidregex = regexp.MustCompile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 var hashregex = regexp.MustCompile("[a-zA-Z0-9]{32,40,64,128}")
@@ -41,7 +41,7 @@ var paramregexes = map[string]*regexp.Regexp{
 	"utm_campaign": dotstar,
 	"utm_content":  dotstar,
 	"utm_term":     dotstar,
-	"redirect":     regexp.MustCompile("no"),
+	"redirxect":    regexp.MustCompile("no"),
 	//TODO version, v, cb, cache ...
 }
 
@@ -50,7 +50,7 @@ func buildlangregex() *regexp.Regexp {
 	reg := "(?i)^("
 	for i, lang := range langcodes {
 		reg += strings.Replace(lang, "-", "[-_]", 1) // match en-US & en_US
-		if i < len(langcodes) {
+		if i < len(langcodes)-1 {
 			reg += "|"
 		}
 	}
@@ -68,9 +68,9 @@ func buildquivalences() map[string]*regexp.Regexp {
 
 func buildeqregex(equivalentwords []string) *regexp.Regexp {
 	reg := "("
-	for i, lang := range langcodes {
-		reg += strings.Replace(lang, "-", "[-_]", 1) // match en-US & en_US
-		if i < len(langcodes) {
+	for i, word := range equivalentwords {
+		reg += strings.Replace(word, "-", "[-_]", 1)
+		if i < len(equivalentwords)-1 {
 			reg += "|"
 		}
 	}
@@ -172,34 +172,24 @@ func lameparam(key, val string) bool {
 func normalizePath(path string) string {
 	normalized := ""
 	split := strings.Split(path, "/")
-	fileName := split[len(split)-1]
-	split = split[:len(split)-1]
 	for _, part := range split {
 		if strings.TrimSpace(part) == "" {
 			continue
 		}
 		normalized += "/" + normalizeItem(part)
 	}
-	if fileName != "" { // this makes /foo/bar?x=y and /foo/bar/?x=y equivalent
-		// e.g. 123.json // FIXME: after the changes in normalizeItem are finished, this shouldn't needed anymore
-		lastInd := strings.LastIndex(fileName, ".")
-		if lastInd == -1 {
-			normalized += "/" + normalizeItem(fileName)
-		} else {
-			normalized += "/" + normalizeItem(fileName[:lastInd]) + "." + fileName[lastInd+1:]
-		}
-	}
 	return normalized
 }
 
 func normalizeItem(item string) string {
-	if len(item) > 10 && titleregex.MatchString(item) {
-		return "!-T-!"
-	}
 	orig := item
+	item = applyequivalences(item)
 	item = hashregex.ReplaceAllString(item, "!-H-!")
 	item = uuidregex.ReplaceAllString(item, "!-U-!")
 	item = langregex.ReplaceAllString(item, "!-L-!")
+	if len(item) > 10 && titleregex.MatchString(item) {
+		return "!-T-!"
+	}
 	if orig == item {
 		// only apply `numberregex` if hash / UUID wasn't found, might be too generic otherwise
 		item = numberregex.ReplaceAllString(item, "!-N-!")
@@ -216,4 +206,11 @@ func cleanHostname(u *url.URL) string {
 		return u.Hostname()
 	}
 	return u.Host
+}
+
+func applyequivalences(item string) string {
+	for replacement, regex := range equivalenceregexes {
+		item = regex.ReplaceAllString(item, replacement)
+	}
+	return item
 }
