@@ -3,19 +3,10 @@
 This tool can reduce a list of URLs in a way which should be useful for pentesting / bug bounty.  
 E.g., when searching intersting URLs in the output of tools like `waymore`, this can do some initial filtering.
 
+![image](https://user-images.githubusercontent.com/42862612/215803684-227232ff-97f7-4fea-af7e-86099da87de6.png)
+
 `urlame` aims to print one URL per feature of the website in addition to blocking known lame URLs.  
 This is done by converting a URL into a pattern and matching that against the patterns seen before.
-
-```sh
-go install github.com/wfinn/urlame@latest
-urlame < many_urls.txt > less_urls.txt
-```
-
-## Example
-
-The easiest way to understand what this does is to see it:
-
-![image](https://user-images.githubusercontent.com/42862612/215803684-227232ff-97f7-4fea-af7e-86099da87de6.png)
 
 ## Things urlame considers lame
 
@@ -51,6 +42,14 @@ These are words you can define, which are kind of equivalent, from our view.
 For example, when filtering tesla URLs you could define `model-3`,`model-y` and so on,
 so only the first `/%carmodel%-details` and `/api/foo/%carmodel%` URLs are printed.
 
+## Usage
+
+If you don't have Go installed read [this](https://go.dev/doc/install).
+
+```sh
+go install github.com/wfinn/urlame@latest
+urlame < many_urls.txt > less_urls.txt
+```
 ---
 
 If you have ideas for more stuff to filter out or find a bug, [let me know](https://github.com/wfinn/urlame/issues/new).
