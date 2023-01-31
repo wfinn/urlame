@@ -15,6 +15,7 @@ import (
 // Equivalences are explained in README.md
 // Modify to include target specific words, which can be normalized to reduce results
 // left side must contain a unique string like FOO, not too long, not too short. This is used internally as replacement
+// words are built into a regex, don't break it, but you can sue that to your advantage
 var equivalences = map[string][]string{
 	//"TESLA": {"model-3", "model-y", ...},
 	// langcodes are too small and need to be treated seperately
@@ -103,6 +104,7 @@ func runurlame(reader io.Reader, output io.ReadWriter, printNormalized bool) err
 				continue
 			} else {
 				seen[normalized] = true
+				seen[urldecode(normalized)] = true //TODO check if this breaks things
 			}
 			if printNormalized {
 				fmt.Fprintf(output, "%s\n", normalized)
@@ -183,11 +185,6 @@ func normalizePath(path string) string {
 
 func normalizeItem(item string) string {
 	orig := item
-	//TODO check if this breaks things
-	if decoded, err := url.QueryUnescape(item); err == nil {
-		item = decoded
-		fmt.Println(item)
-	}
 	item = applyequivalences(item)
 	item = hashregex.ReplaceAllString(item, "!-H-!")
 	item = uuidregex.ReplaceAllString(item, "!-U-!")
@@ -198,6 +195,13 @@ func normalizeItem(item string) string {
 	if orig == item {
 		// only apply `numberregex` if hash / UUID wasn't found, might be too generic otherwise
 		item = numberregex.ReplaceAllString(item, "!-N-!")
+	}
+	return item
+}
+
+func applyequivalences(item string) string {
+	for replacement, regex := range equivalenceregexes {
+		item = regex.ReplaceAllString(item, "!-"+replacement+"-!")
 	}
 	return item
 }
@@ -213,9 +217,9 @@ func cleanHostname(u *url.URL) string {
 	return u.Host
 }
 
-func applyequivalences(item string) string {
-	for replacement, regex := range equivalenceregexes {
-		item = regex.ReplaceAllString(item, replacement)
+func urldecode(str string) string {
+	if decoded, err := url.QueryUnescape(str); err == nil {
+		return decoded
 	}
-	return item
+	return str
 }
