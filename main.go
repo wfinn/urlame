@@ -42,7 +42,7 @@ var paramregexes = map[string]*regexp.Regexp{
 	"utm_campaign": dotstar,
 	"utm_content":  dotstar,
 	"utm_term":     dotstar,
-	"redirxect":    regexp.MustCompile("no"),
+	"redirect":     regexp.MustCompile("no"),
 	//TODO version, v, cb, cache ...
 }
 

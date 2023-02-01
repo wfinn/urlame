@@ -28,3 +28,7 @@ https://example.org/params?B=something
 
 https://example.com/?encoded[1]=xyz
 https://example.com/?encoded%5B1%5D=xyz
+
+https://example.com/en-US/combined/item-1
+https://example.com/de-DE/combined/item-5
+https://example.com/de-DE/combined/item-deletion
