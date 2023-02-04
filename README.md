@@ -31,11 +31,11 @@ This means that `/en-US/upload/item/1` and `/de-DE/upload/item/5` are considered
 
 ## Customization
 
-You can just use `urlame` without any customization, but be aware that it is opinionated and generic.
+You can just use `urlame` without any customization, but be aware of its limitations.
 
 Some websites have patterns which should be considered, but which do not apply for other targets,
 meaning `urlame` would filter stuff we do not want to filter out on these other websites.  
-In such cases, you must modify the source code yourself to get better results.
+In such cases, you must use `grep -v` or modify the source code yourself to get better results.
 
 One mechanism for target specific filtering exists called "equivalences".  
 These are words you can define, which are kind of equivalent, from our view.  
@@ -56,6 +56,6 @@ waymore example.org | tee all_urls.txt | urlame > filtered_urls.txt
 ```
 ---
 
-If you have ideas for more stuff to filter out or find a bug, [let me know](https://github.com/wfinn/urlame/issues/new).
+If you have ideas for more stuff to filter out or find a bug, [let me know](https://github.com/wfinn/urlame/issues/new).:q
 
 Inspired by [uro](https://github.com/s0md3v/uro)
