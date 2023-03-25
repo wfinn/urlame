@@ -9,3 +9,8 @@ https://example.org/params?B=something
 https://example.com/?encoded[1]=xyz
 https://example.com/en-US/combined/item-1
 https://example.com/de-DE/combined/item-deletion
+https://example.com/
+https://example.com/robots.txt?newparam=1
+http://newsubdomain.example.com/robots.txt
+https://example.com/newdir/robots.txt
+https://example.com/robots.txt/itsadir

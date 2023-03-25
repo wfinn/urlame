@@ -50,12 +50,12 @@ If you don't have Go installed read [this](https://go.dev/doc/install).
 # installation
 go install github.com/wfinn/urlame@latest
 # basic usage
-urlame < many_urls.txt > less_urls.txt
+urlame < many_urls.txt > fewer_urls.txt
 # practical example
 waymore example.org | tee all_urls.txt | urlame > filtered_urls.txt
 ```
 ---
 
-If you have ideas for more stuff to filter out or find a bug, [let me know](https://github.com/wfinn/urlame/issues/new).:q
+If you have ideas for more stuff to filter out or find a bug, [let me know](https://github.com/wfinn/urlame/issues/new).
 
 Inspired by [uro](https://github.com/s0md3v/uro)
