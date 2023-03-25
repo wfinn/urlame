@@ -29,19 +29,6 @@ It further can detect some patterns in parts of URLs which are ignored when comp
 
 This means that `/en-US/upload/item/1` and `/de-DE/upload/item/5` are considered equal, so only the first will be printed.
 
-## Customization
-
-You can just use `urlame` without any customization, but be aware that it is opinionated and generic.
-
-Some websites have patterns which should be considered, but which do not apply for other targets,
-meaning `urlame` would filter stuff we do not want to filter out on these other websites.  
-In such cases, you must modify the source code yourself to get better results.
-
-One mechanism for target specific filtering exists called "equivalences".  
-These are words you can define, which are kind of equivalent, from our view.  
-For example, when filtering tesla URLs you could define `model-3`,`model-y` and so on,
-so only the first `/%carmodel%-details` and `/api/foo/%carmodel%` URLs are printed.
-
 ## Usage
 
 If you don't have Go installed read [this](https://go.dev/doc/install).
