@@ -1,3 +1,4 @@
+// urlame -
 package main
 
 import (
@@ -12,20 +13,10 @@ import (
 	"strings"
 )
 
-// Equivalences are explained in README.md
-// Modify to include target specific words, which can be normalized to reduce results
-// left side must contain a unique string like FOO, not too long, not too short. This is used internally as replacement
-// words are built into a regex, don't break it, but you can use that to your advantage
-// This isn't tested well
-var equivalences = map[string][]string{
-	//"TESLA": {"model-3", "model-y", ...},
-	// langcodes are too small and need to be treated seperately
-}
-
-//maybe numbers should be surrounded by special chars, or be at least a certain amount of digits?
+// maybe numbers should be surrounded by special chars, or be at least a certain amount of digits?
 var numberregex = regexp.MustCompile("\\d+(\\.\\d+)?")
 var profilepageregex = regexp.MustCompile("(?i)/(u|user|profile|author|member|referral)s?/[^/]+/?")
-var titleregex = regexp.MustCompile("^/[A-Za-z0-9.]+-[A-Za-z0-9.]+-[A-Za-z0-9.\\-]+$")
+var titleregex = regexp.MustCompile("/[A-Za-z0-9.]+-[A-Za-z0-9.]+-[A-Za-z0-9.\\-]+$")
 var langregex = buildlangregex()
 var uuidregex = regexp.MustCompile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 var hashregex = regexp.MustCompile("[a-zA-Z0-9]{32,40,64,128}")
@@ -36,9 +27,9 @@ var equivalenceregexes = buildquivalences()
 var exts = []string{".js", ".css", ".png", ".jpg", ".jpeg", ".svg", ".gif", ".ico", ".bmp", ".rss", ".mp3", ".mp4", ".ttf", ".woff", ".woff2", ".eot", ".pdf", ".m4v", ".ogv", ".webm"}
 var paths = []string{"static", "wp-content", "blog", "blogs", "product", "doc", "docs", "support", "news", "article", "fonts"}
 
-// .html will be matched with many static
-var files = []string{"index.html", "robots.txt", "contact.html", "home.html"}
-var staticexts = regexp.MustCompile("^\\.(html|html|php|cgi)$")
+// .html here means it matches with many static file exts (staticexts)
+var files = []string{"index.html", "robots.txt", "contact.html", "home.html", "impressum.html"}
+var staticexts = regexp.MustCompile("^\\.(htm|html|php|cgi)$")
 
 var langcodes = []string{"af", "af-ZA", "ar", "ar-AE", "ar-BH", "ar-DZ", "ar-EG", "ar-IQ", "ar-JO", "ar-KW", "ar-LB", "ar-LY", "ar-MA", "ar-OM", "ar-QA", "ar-SA", "ar-SY", "ar-TN", "ar-YE", "az", "az-AZ", "az-AZ", "be", "be-BY", "bg", "bg-BG", "bs-BA", "ca", "ca-ES", "cs", "cs-CZ", "cy", "cy-GB", "da", "da-DK", "de", "de-AT", "de-CH", "de-DE", "de-LI", "de-LU", "dv", "dv-MV", "el", "el-GR", "en", "en-AU", "en-BZ", "en-CA", "en-CB", "en-GB", "en-IE", "en-JM", "en-NZ", "en-PH", "en-TT", "en-US", "en-ZA", "en-ZW", "eo", "es", "es-AR", "es-BO", "es-CL", "es-CO", "es-CR", "es-DO", "es-EC", "es-ES", "es-ES", "es-GT", "es-HN", "es-MX", "es-NI", "es-PA", "es-PE", "es-PR", "es-PY", "es-SV", "es-UY", "es-VE", "et", "et-EE", "eu", "eu-ES", "fa", "fa-IR", "fi", "fi-FI", "fo", "fo-FO", "fr", "fr-BE", "fr-CA", "fr-CH", "fr-FR", "fr-LU", "fr-MC", "gl", "gl-ES", "gu", "gu-IN", "he", "he-IL", "hi", "hi-IN", "hr", "hr-BA", "hr-HR", "hu", "hu-HU", "hy", "hy-AM", "id", "id-ID", "is", "is-IS", "it", "it-CH", "it-IT", "ja", "ja-JP", "ka", "ka-GE", "kk", "kk-KZ", "kn", "kn-IN", "ko", "ko-KR", "kok", "kok-IN", "ky", "ky-KG", "lt", "lt-LT", "lv", "lv-LV", "mi", "mi-NZ", "mk", "mk-MK", "mn", "mn-MN", "mr", "mr-IN", "ms", "ms-BN", "ms-MY", "mt", "mt-MT", "nb", "nb-NO", "nl", "nl-BE", "nl-NL", "nn-NO", "ns", "ns-ZA", "pa", "pa-IN", "pl", "pl-PL", "ps", "ps-AR", "pt", "pt-BR", "pt-PT", "qu", "qu-BO", "qu-EC", "qu-PE", "ro", "ro-RO", "ru", "ru-RU", "sa", "sa-IN", "se", "se-FI", "se-FI", "se-FI", "se-NO", "se-NO", "se-NO", "se-SE", "se-SE", "se-SE", "sk", "sk-SK", "sl", "sl-SI", "sq", "sq-AL", "sr-BA", "sr-BA", "sr-SP", "sr-SP", "sv", "sv-FI", "sv-SE", "sw", "sw-KE", "syr", "syr-SY", "ta", "ta-IN", "te", "te-IN", "th", "th-TH", "tl", "tl-PH", "tn", "tn-ZA", "tr", "tr-TR", "tt", "tt-RU", "ts", "uk", "uk-UA", "ur", "ur-PK", "uz", "uz-UZ", "uz-UZ", "vi", "vi-VN", "xh", "xh-ZA", "zh", "zh-CN", "zh-HK", "zh-MO", "zh-SG", "zh-TW", "zu", "zu-zA"}
 
@@ -88,6 +79,8 @@ func buildeqregex(equivalentwords []string) *regexp.Regexp {
 	return regexp.MustCompile(reg)
 }
 
+// --- setup of vars ends ---
+
 func main() {
 	printNormalized := flag.Bool("print-normalized", false, "print the normalized version of the urls (for debugging)")
 	flag.Usage = func() {
@@ -98,6 +91,7 @@ func main() {
 	runurlame(os.Stdin, os.Stdout, *printNormalized)
 }
 
+// extracted from main to run tests more easily
 func runurlame(input io.Reader, output io.Writer, printNormalized bool) error {
 	seen := map[string]bool{}
 	stdin := bufio.NewScanner(input)
@@ -125,6 +119,7 @@ func runurlame(input io.Reader, output io.Writer, printNormalized bool) error {
 	return nil
 }
 
+// detects lame file extensions
 func lamefiletype(u *url.URL) bool {
 	filetype := strings.ToLower(path.Ext(u.Path))
 	for _, ext := range exts {
@@ -135,6 +130,7 @@ func lamefiletype(u *url.URL) bool {
 	return false
 }
 
+// detects if one of the first path segments is lame
 func lamedir(u *url.URL) bool {
 	for i, part := range strings.Split(u.Path, "/") {
 		lower := strings.ToLower(part)
@@ -151,6 +147,7 @@ func lamedir(u *url.URL) bool {
 	return titleregex.MatchString(u.Path)
 }
 
+// sees if uPath matches profilepageregex
 func profilepage(u *url.URL) bool {
 	if profilepageregex.MatchString(u.Path) {
 		return true
@@ -158,6 +155,7 @@ func profilepage(u *url.URL) bool {
 	return false
 }
 
+// ...
 func normalizeURL(urlstr string) string {
 	//this func needs the original string instead of a url as it may return it unchanged
 	if u, err := url.Parse(urlstr); err == nil {
@@ -173,6 +171,7 @@ func normalizeURL(urlstr string) string {
 	return urlstr
 }
 
+// detects lame parameter names, like utm_source
 func lameparam(key, val string) bool {
 	if paramregexes[key] != nil {
 		return paramregexes[key].MatchString(val)
@@ -180,6 +179,7 @@ func lameparam(key, val string) bool {
 	return false
 }
 
+// splits path into segments and normalizes them, the last segment (filename) is a special case
 func normalizePath(path string) string {
 	normalized := ""
 	split := strings.Split(strings.TrimRight(path, "/"), "/")
@@ -191,14 +191,13 @@ func normalizePath(path string) string {
 		}
 		normalized += "/" + normalizeItem(part)
 	}
-	// TODO a feature we could add here is to remove common filenames, e.g. contact.html robots.txt etc
-	// By doing it here and not just blocking them we wouldn't miss any directory or host, but we could ignore lame files
+	// normalFilename is feature to remove common filenames, e.g. contact.html robots.txt etc
+	// By doing it here and not just blocking them we don't miss any directory or host, but we can ignore lame files
 	// (this avoids  filtering in cases where https://neverseenbefore.host/robots.txt is the only URL of neverseenbefore.host for example)
-	// the .html in the list could be replaced by a regex of all variations html htm php etc
 	return normalized + "/" + normalFilename(file)
 }
 
-//This removes lame filenames, so we can ignore them safely
+// removes lame filenames, so we can ignore them safely
 func normalFilename(filename string) string {
 	for _, lamefile := range files {
 		if lamefile == filename || staticexts.ReplaceAllString(filename, ".html") == lamefile {
@@ -208,6 +207,7 @@ func normalFilename(filename string) string {
 	return normalizeItem(filename)
 }
 
+// normalizes a single item, e.g. path segment
 func normalizeItem(item string) string {
 	orig := item
 	item = applyequivalences(item)
@@ -221,6 +221,7 @@ func normalizeItem(item string) string {
 	return item
 }
 
+// experimental feature to let power users define target specific "equivalent" words
 func applyequivalences(item string) string {
 	for replacement, regex := range equivalenceregexes {
 		item = regex.ReplaceAllString(item, "!-"+replacement+"-!")
@@ -228,10 +229,12 @@ func applyequivalences(item string) string {
 	return item
 }
 
+// this builds the URL "pattern" (/ normalized URL) we use for comparison internally
 func newURL(old *url.URL, path string, vals url.Values) string {
 	return /*ignore scheme*/ cleanHostname(old) + path + "?" + vals.Encode() + "#" + old.Fragment
 }
 
+// this function removes default port info, so http://foo & http://foo:80 are equal, but http://foo:123 is different
 func cleanHostname(u *url.URL) string {
 	if u.Port() == "80" || u.Port() == "443" {
 		return u.Hostname()
