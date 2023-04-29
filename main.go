@@ -16,7 +16,7 @@ import (
 // maybe numbers should be surrounded by special chars, or be at least a certain amount of digits?
 var numberregex = regexp.MustCompile("\\d+(\\.\\d+)?")
 var profilepageregex = regexp.MustCompile("(?i)/(u|user|profile|author|member|referral)s?/[^/]+/?")
-var titleregex = regexp.MustCompile("/[A-Za-z0-9.]+-[A-Za-z0-9.]+-[A-Za-z0-9.\\-]+$")
+var titleregex = regexp.MustCompile("^(/[^/]+)?/[A-Za-z0-9.]+-[A-Za-z0-9.]+-[A-Za-z0-9.\\-]+$")
 var langregex = buildlangregex()
 var uuidregex = regexp.MustCompile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 var hashregex = regexp.MustCompile("[a-zA-Z0-9]{32,40,64,128}")
@@ -91,7 +91,6 @@ func main() {
 	runurlame(os.Stdin, os.Stdout, *printNormalized)
 }
 
-// extracted from main to run tests more easily
 func runurlame(input io.Reader, output io.Writer, printNormalized bool) error {
 	seen := map[string]bool{}
 	stdin := bufio.NewScanner(input)
@@ -107,7 +106,7 @@ func runurlame(input io.Reader, output io.Writer, printNormalized bool) error {
 				continue
 			} else {
 				seen[normalized] = true
-				seen[urldecode(normalized)] = true //TODO check if this breaks things
+				seen[urldecode(normalized)] = true
 			}
 			if printNormalized {
 				fmt.Fprintf(output, "%s\n", normalized)
@@ -147,7 +146,7 @@ func lamedir(u *url.URL) bool {
 	return titleregex.MatchString(u.Path)
 }
 
-// sees if uPath matches profilepageregex
+// sees if u.Path matches profilepageregex
 func profilepage(u *url.URL) bool {
 	if profilepageregex.MatchString(u.Path) {
 		return true
@@ -164,6 +163,7 @@ func normalizeURL(urlstr string) string {
 			if !lameparam(key, u.Query().Get(key)) {
 				// ignoring lame params, if we see /foo and /foo?utm_source=bar we only list the first
 				newvals.Set(normalizeItem(key), "!-P-!")
+				//TODO, replace !-P-! with a pattern of inputs
 			}
 		}
 		return newURL(u, normalizePath(u.Path), newvals)
@@ -221,7 +221,7 @@ func normalizeItem(item string) string {
 	return item
 }
 
-// experimental feature to let power users define target specific "equivalent" words
+// experimental feature to define target specific "equivalent" words, see equivalences.go
 func applyequivalences(item string) string {
 	for replacement, regex := range equivalenceregexes {
 		item = regex.ReplaceAllString(item, "!-"+replacement+"-!")

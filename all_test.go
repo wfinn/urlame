@@ -113,3 +113,15 @@ http://localhost/foobar
 `
 	staticTest("common lame params are ignored", urls, expected, t)
 }
+
+func TestTitles(t *testing.T) {
+	urls := `
+https://example.org/10-things-you-already-knew
+https://example.org/foo/10-things-you-already-knew
+https://example.org/api/edit/post/10-things-you-already-knew
+`
+	expected := `
+https://example.org/api/edit/post/10-things-you-already-knew
+`
+	staticTest("some blogs are ignored, but potentially interesting things stay", urls, expected, t)
+}
